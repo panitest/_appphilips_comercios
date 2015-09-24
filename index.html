@@ -502,13 +502,13 @@ function savePartInServer(res){
 <div style=" height:4px; background:#000; width:100%; margin-bottom:8px;width:50px;"></div>
 </div>
 <label>Nombre del comercio<br>
-<input name="nombre_comercio" id="nombre_comercio" type="text">
+<input disabled name="nombre_comercio" id="nombre_comercio" type="text">
 </label>
 <label>Dirección del comercio<br>
-<input name="direccion_comercio" id="direccion_comercio" type="text">
+<input disabled name="direccion_comercio" id="direccion_comercio" type="text">
 </label>
 <label>Tipo de comercio<br>
-<select name="tipo_comercio" id="tipo_comercio">
+<select disabled name="tipo_comercio" id="tipo_comercio">
 <option value="me">Comercio de Materiales Eléctricos</option>
 <option value="retail">Super / Hipermercado</option>
 </select>
@@ -516,11 +516,8 @@ function savePartInServer(res){
 <label>Premios disponibles<br>
 <div id="premios_disponibles">Descuento 30%: 3, Descuento 20%: 15, Descuento 10%: 42</div>
 </label>
-<label>Clave de administrador<br>
-<input name="clave_admin" id="clave_admin" type="password">
-</label>
-<label><br>
-<input onClick="modificarComercio();" type="button" name="" value="GUARDAR DATOS">
+
+
 </label>
 </div>
 
