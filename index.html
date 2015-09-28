@@ -285,8 +285,21 @@ function evaluar(rta){
 		}
 		 getPage('correcto'+nro+'.html',c);
 	}else{
-		 savePartInServer('perdio');
-		 getPage('ups.html');
+		var datos={};
+		datos['nombre_comercio']=$('nombre_comercio').value;
+		datos['direccion_comercio']=$('direccion_comercio').value;
+		datos['tipo_comercio']=$('tipo_comercio').value;
+		datos['descuento30']=ns.descuento30;
+		datos['descuento20']=ns.descuento20;
+		datos['descuento10']=ns.descuento10;
+		datos['ganadas']=ns.ganadas;
+		ns.perdidas=parseInt(ns.perdidas,10)+1;
+		datos['perdidas']=ns.perdidas;
+		localStorage.setItem('datos',JSON.stringify(datos));
+		actualizarPremios();
+		saveDataInServer();
+		savePartInServer('perdio');
+		getPage('ups.html');
 	}
 }
 function fin(){
@@ -305,7 +318,7 @@ function fin(){
 		destino='diezpremio.html';
 		break;
 	}
-	actualizarPremios();
+	
 	var datos={};
 	datos['nombre_comercio']=$('nombre_comercio').value;
 	datos['direccion_comercio']=$('direccion_comercio').value;
@@ -313,10 +326,13 @@ function fin(){
 	datos['descuento30']=ns.descuento30;
 	datos['descuento20']=ns.descuento20;
 	datos['descuento10']=ns.descuento10;
-	
+	ns.ganadas=parseInt(ns.ganadas,10)+1;
+	datos['ganadas']=ns.ganadas;
+	datos['perdidas']=ns.perdidas;
 	localStorage.setItem('datos',JSON.stringify(datos));
 	saveDataInServer();
 	savePartInServer('gano');
+	actualizarPremios();
 	setTimeout(
 		function(){getPage(destino);	},
 		1000
@@ -363,6 +379,8 @@ function settings(){
 		ns.descuento10=datos['descuento10'];
 		ns.nombre_comercio=datos['nombre_comercio'];
 		ns.direccion_comercio=datos['direccion_comercio'];
+		ns.ganadas=datos['ganadas'] || 0;
+		ns.perdidas=datos['perdidas'] || 0;
 		actualizarPremios();
 		$('nombre_comercio').value=datos['nombre_comercio'];
 		$('direccion_comercio').value=datos['direccion_comercio'];
@@ -386,6 +404,7 @@ function administrar(){
 }
 function actualizarPremios(){
 	$('premios_disponibles').innerHTML='Descuento 30%: '+ns.descuento30+', Descuento 20%: '+ns.descuento20+', Descuento 10%: '+ns.descuento10;
+	$('premios_disponibles').innerHTML+='<br>Juegos ganados: '+ns.ganadas+', Juegos perdidos: '+ns.perdidas;
 }
 function nuevoComercio(){
 	if($('nombre_comercio2').value.length<1){
@@ -407,6 +426,8 @@ function nuevoComercio(){
 	datos['descuento30']=3;
 	datos['descuento20']=15;
 	datos['descuento10']=42;
+	datos['ganadas']=0;
+	datos['perdidas']=0;
 	localStorage.setItem('datos',JSON.stringify(datos));
 	settings();
 	$('panel').style.display='none';
@@ -468,7 +489,7 @@ function saveDataInServer(){
 		);
 }
 function savePartInServer(res){
-		var data={'proceso':'savedatapartic','datos':res}
+		var data={'proceso':'savedatapartic','datos':localStorage.getItem('datos')}
 		request(
 				'http://servidordeapps.com/proceso2.php',
 				function(r){
